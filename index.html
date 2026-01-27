@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Solutions | 企业级商业智能门户</title>
+    <meta name="description" content="聚合企业级AI商用场景，高质感商业主页。">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans SC"', 'Inter', 'sans-serif'],
+                        heading: ['"Noto Sans SC"', 'Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand': '#2563eb',     
+                        'brand-dark': '#1e40af',
+                        'accent': '#06b6d4',
+                        'surface': '#ffffff',
+                        'surface-50': '#f8fafc',
+                        'text-main': '#0f172a',
+                        'text-muted': '#64748b',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Noto Sans SC', 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+
+        .bg-blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 10s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand/10 selection:text-brand-dark">
+
+    <!-- 背景光球 -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="bg-blob bg-blue-200 w-96 h-96 top-0 left-[-100px] rounded-full mix-blend-multiply"></div>
+        <div class="bg-blob bg-cyan-200 w-96 h-96 top-[20%] right-[-100px] rounded-full mix-blend-multiply animation-delay-2000"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <!-- 核心需求：返回秒创AI按钮 -->
+                <a href="http://www.wdl.best" class="flex items-center gap-2 text-text-muted hover:text-brand transition-colors text-sm font-semibold border-r border-slate-200 pr-6">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回秒创 AI</span>
+                </a>
+
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand to-brand-dark flex items-center justify-center text-white font-bold shadow-lg">E</div>
+                    <span class="font-heading font-bold text-lg tracking-tight text-text-main">Enterprise Hub <span class="text-xs text-brand bg-blue-50 px-2 py-0.5 rounded-full ml-1 border border-blue-100">PRO</span></span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-1 text-xs text-text-muted bg-white/50 px-3 py-1.5 rounded-full border border-slate-200">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    系统运行正常
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20">
+        
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto px-6 mb-16 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-brand text-xs font-bold uppercase tracking-wide mb-6 animate-fade-in-up">
+                    Enterprise Solutions v2.0
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-text-main tracking-tight mb-6 leading-tight animate-fade-in-up" style="animation-delay: 0.1s;">
+                    企业级 AI <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-accent">商用场景实验室</span>
+                </h1>
+                <p class="text-lg text-text-muted leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+                    这里聚合了我们最新的商业化 AI 应用探索。从互动娱乐到企业效能，每一个子项目都代表了 AI 在垂直领域的深度实践。
+                </p>
+            </div>
+        </section>
+
+        <!-- 项目卡片网格 -->
+        <section class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- [Project 1] 赛马娘曼波 -->
+                <a href="./manbo.html" class="glass-card rounded-2xl p-6 group cursor-pointer relative overflow-hidden block">
+                    <!-- 标签 -->
+                    <div class="absolute top-4 right-4 z-10">
+                        <span class="bg-pink-50 text-pink-600 text-[10px] font-bold px-2 py-1 rounded border border-pink-100">互动娱乐</span>
+                    </div>
+
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-pink-500/30 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-horse-head"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900 group-hover:text-brand transition-colors">赛马娘曼波</h3>
+                            <p class="text-xs text-gray-500 font-mono mt-1">Meisho Mambo Project</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-6 leading-relaxed">
+                        基于 Anime.js 和 Web Audio API 构建的沉浸式粉丝互动站。包含波普艺术风格 UI、节奏音游模块以及实时飞书数据排行榜。
+                    </p>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div class="flex -space-x-2">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 border-2 border-white"></div>
+                            <div class="w-6 h-6 rounded-full bg-gray-300 border-2 border-white"></div>
+                            <div class="w-6 h-6 rounded-full bg-gray-400 border-2 border-white flex items-center justify-center text-[8px] text-white font-bold">5k+</div>
+                        </div>
+                        <span class="text-xs font-bold text-brand group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            启动应用 <i class="fas fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- [Project 2] Placeholder -->
+                <div class="glass-card rounded-2xl p-6 opacity-60 border-dashed border-2 border-gray-200 bg-gray-50/50">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400 text-2xl">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-400">企业知识库助手</h3>
+                            <p class="text-xs text-gray-400 font-mono mt-1">RAG Knowledge Base</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                        [开发中] 基于 DeepSeek 的企业级私有化知识问答系统。支持文档上传、向量检索与精准问答。
+                    </p>
+                    <div class="inline-block bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded font-bold">Coming Soon</div>
+                </div>
+
+                <!-- [Project 3] Placeholder -->
+                <div class="glass-card rounded-2xl p-6 opacity-60 border-dashed border-2 border-gray-200 bg-gray-50/50">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-xl bg-gray-200 flex items-center justify-center text-gray-400 text-2xl">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-400">AI 营销数据中台</h3>
+                            <p class="text-xs text-gray-400 font-mono mt-1">Marketing BI</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+                        [规划中] 自动化生成营销报表，利用 LLM 进行数据洞察与趋势预测。
+                    </p>
+                    <div class="inline-block bg-gray-200 text-gray-500 text-xs px-2 py-1 rounded font-bold">Coming Soon</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 技术栈展示 -->
+        <section class="max-w-7xl mx-auto px-6 mt-20 pt-10 border-t border-slate-200">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center">Powered By Enterprise Tech Stack</p>
+            <div class="flex flex-wrap justify-center gap-8 text-slate-400 grayscale opacity-70">
+                <div class="flex items-center gap-2"><i class="fab fa-node-js text-xl"></i> Node.js</div>
+                <div class="flex items-center gap-2"><i class="fab fa-react text-xl"></i> Tailwind</div>
+                <div class="flex items-center gap-2"><i class="fas fa-database text-xl"></i> Feishu Base</div>
+                <div class="flex items-center gap-2"><i class="fas fa-cloud text-xl"></i> Vercel</div>
+                <div class="flex items-center gap-2"><i class="fas fa-brain text-xl"></i> OpenAI</div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
