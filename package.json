@@ -1,7 +1,7 @@
 {
   "name": "meisho-mambo-fansite",
   "version": "1.0.0",
-  "description": "赛马娘名将间风（Meisho Mambo）粉丝站/娱乐站后端服务",
+  "description": "AI企业网站实验室",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -21,4 +21,5 @@
   "engines": {
     "node": ">=14.0.0"
   }
+
 }
