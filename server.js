@@ -2,6 +2,8 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,15 +18,66 @@ app.use((req, res, next) => {
     next();
 });
 
+// ================= 关键配置：静态文件 MIME 类型 =================
+
+const staticOptions = {
+    setHeaders: (res, filePath) => {
+        if (filePath.toLowerCase().endsWith('.mp3')) {
+            // 强制设置音频 MIME 类型，防止被当成二进制流下载
+            res.set('Content-Type', 'audio/mpeg');
+            // 支持范围请求 (Range Requests)，这对于音频拖动进度条和 Safari 播放至关重要
+            res.set('Accept-Ranges', 'bytes');
+        }
+    }
+};
+
+// 1. 静态资源托管
+// 强制让 Express 托管 music 目录，并应用上面的 MIME 配置
+app.use('/music', express.static(path.join(__dirname, 'music'), staticOptions));
+app.use(express.static(__dirname, staticOptions));
+
+// 2. 文件侦探 API
+app.get('/api/debug-files', (req, res) => {
+    const debugInfo = {
+        currentDir: __dirname,
+        musicDirExists: false,
+        musicFiles: [],
+        rootFiles: []
+    };
+
+    try {
+        debugInfo.rootFiles = fs.readdirSync(__dirname).map(file => {
+            const stat = fs.statSync(path.join(__dirname, file));
+            return { name: file, size: stat.size };
+        });
+
+        const musicPath = path.join(__dirname, 'music');
+        if (fs.existsSync(musicPath)) {
+            debugInfo.musicDirExists = true;
+            debugInfo.musicFiles = fs.readdirSync(musicPath).map(file => {
+                const stat = fs.statSync(path.join(musicPath, file));
+                return { name: file, size: stat.size }; // 返回文件大小，检查是否为 0
+            });
+        }
+        
+        res.json({
+            success: true,
+            msg: "文件系统侦探报告",
+            data: debugInfo,
+            tips: "请检查 musicFiles 中是否有你的 MP3，且 size > 0。"
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // ================= 配置区域 =================
 const FEISHU_CONFIG = {
-    // 使用你提供的凭证
     appId: process.env.FEISHU_APP_ID || 'cli_a9f2f520bf79dcc7',
     appSecret: process.env.FEISHU_APP_SECRET || 'zMBAfGeBFWdGgxkmc53cHbJ442AeEyIg',
-    // 你提供的特定表格 ID
     tableIds: {
-        users: 'tbl9tatvwt2gZhAi',      // 用户表
-        scores: 'tblcrqvqZe46vPcx'      // 曼波模拟器/排行榜表
+        users: 'tbl9tatvwt2gZhAi',
+        scores: 'tblcrqvqZe46vPcx'
     }
 };
 
@@ -33,14 +86,8 @@ let tokenExpiry = 0;
 
 // ================= 工具函数 =================
 
-// 辅助函数：延迟执行
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// [已修复] 飞书日期字段必须接受 13位毫秒时间戳 (Number 类型)，而不是字符串
-// 飞书会自动将其转换为 YYYY-MM-DD HH:mm:ss 显示
-// 原来的 getFormattedDateTime 返回字符串会导致 DatetimeFieldConvFail 错误
-
-// 核心封装：带重试机制的请求
 async function callFeishuAPI(method, url, data = null, headers = {}) {
     let retries = 0;
     const maxRetries = 3;
@@ -87,10 +134,12 @@ async function getTenantAccessToken() {
     }
 }
 
+async function getAppToken() {
+    return 'AU53bxFVyaAxRtszH7TcZpmnnVf';
+}
+
 // ================= 业务路由 =================
 
-// 1. 用户注册/登录
-// 逻辑：前端生成或用户输入 -> 后端查重 -> 写入飞书
 app.post('/api/register', async (req, res) => {
     const { username } = req.body;
     if (!username) return res.json({ success: false, msg: "用户名不能为空" });
@@ -98,31 +147,20 @@ app.post('/api/register', async (req, res) => {
     try {
         const token = await getTenantAccessToken();
         const tableId = FEISHU_CONFIG.tableIds.users;
+        const APP_TOKEN = await getAppToken();
 
-        // 1. 查重 (Filter)
-        // 注意：飞书 API 筛选字段需要确保该字段在多维表格中是索引或文本类型
         const filter = `CurrentValue.[姓名]="${username}"`;
-        const searchUrl = `https://open.feishu.cn/open-apis/bitable/v1/apps/${await getAppToken()}/tables/${tableId}/records?filter=${encodeURIComponent(filter)}`;
-        
-        // 为了简化，这里我们假设我们有一个有效的 app_token。
-        // 在实际飞书API中，操作表格通常需要 app_token (base_token)。
-        // *重要*：由于你提供的 token 'AU53bxFVyaAxRtszH7TcZpmnnVf' 可能是 app_token，我们在此使用。
-        const APP_TOKEN = 'AU53bxFVyaAxRtszH7TcZpmnnVf'; 
-
         const searchRes = await callFeishuAPI('get', `https://open.feishu.cn/open-apis/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records?filter=${encodeURIComponent(filter)}`, null, {
             Authorization: `Bearer ${token}`
         });
 
         if (searchRes.data.data.total > 0) {
-            // 用户已存在，直接返回成功，视为登录
             return res.json({ success: true, msg: "欢迎回来", isNew: false, username });
         }
 
-        // 2. 新增用户
         const createRes = await callFeishuAPI('post', `https://open.feishu.cn/open-apis/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records`, {
             fields: {
                 "姓名": username,
-                // [修复] 使用 Date.now() 毫秒时间戳，飞书会自动转为精确的日期时间
                 "建立日期": Date.now() 
             }
         }, { Authorization: `Bearer ${token}` });
@@ -139,22 +177,19 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// 2. 提交曼波指数 (记录分数)
 app.post('/api/score', async (req, res) => {
     const { username, score } = req.body;
     if (!username || score === undefined) return res.json({ success: false, msg: "数据不完整" });
 
     try {
         const token = await getTenantAccessToken();
-        const APP_TOKEN = 'AU53bxFVyaAxRtszH7TcZpmnnVf';
+        const APP_TOKEN = await getAppToken();
         const tableId = FEISHU_CONFIG.tableIds.scores;
 
-        // 直接写入一条新记录 (根据需求：刷新日期, 曼波指数, 姓名)
-        const createRes = await callFeishuAPI('post', `https://open.feishu.cn/open-apis/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records`, {
+        await callFeishuAPI('post', `https://open.feishu.cn/open-apis/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records`, {
             fields: {
                 "姓名": username,
                 "曼波指数": parseInt(score),
-                // [修复] 使用 Date.now() 毫秒时间戳
                 "刷新日期": Date.now() 
             }
         }, { Authorization: `Bearer ${token}` });
@@ -167,21 +202,14 @@ app.post('/api/score', async (req, res) => {
     }
 });
 
-// 3. 获取曼波看板 (排行榜)
 app.get('/api/leaderboard', async (req, res) => {
     try {
         const token = await getTenantAccessToken();
-        const APP_TOKEN = 'AU53bxFVyaAxRtszH7TcZpmnnVf';
+        const APP_TOKEN = await getAppToken();
         const tableId = FEISHU_CONFIG.tableIds.scores;
 
-        // 排序并限制返回 10 条
-        // sort 格式: ["字段名 DESC"]
         const sort = JSON.stringify(["曼波指数 DESC"]);
         const url = `https://open.feishu.cn/open-apis/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records?sort=${encodeURIComponent(sort)}`;
-
-        // 注意：飞书API获取列表稍有不同，这里使用简化的列表获取逻辑，实际可能需要处理分页
-        // 这里为了演示，我们获取前 20 条然后在内存里截取（如果API不支持直接TopN）
-        // 但 sort 参数通常是支持的
         
         const listRes = await callFeishuAPI('get', url, null, {
             Authorization: `Bearer ${token}`
@@ -189,13 +217,10 @@ app.get('/api/leaderboard', async (req, res) => {
 
         if (listRes.data.code === 0) {
             const items = listRes.data.data.items || [];
-            // 提取需要的数据
             const leaderboard = items.map(item => {
-                // 格式化时间戳以便前端显示 (可选)
                 let dateStr = '-';
                 if (item.fields["刷新日期"]) {
                     const d = new Date(item.fields["刷新日期"]);
-                    // 简单的格式化：YYYY-MM-DD
                     dateStr = d.toISOString().split('T')[0]; 
                 }
                 return {
@@ -203,7 +228,7 @@ app.get('/api/leaderboard', async (req, res) => {
                     score: item.fields["曼波指数"],
                     date: dateStr
                 };
-            }).slice(0, 10); // 确保只取前10
+            }).slice(0, 10);
 
             res.json({ success: true, data: leaderboard });
         } else {
@@ -216,36 +241,18 @@ app.get('/api/leaderboard', async (req, res) => {
     }
 });
 
-// 辅助：获取 APP_TOKEN (如果需要动态获取，但在本例中你已经提供了)
-// ... 上面是 API 路由 ...
-
-// 辅助：获取 APP_TOKEN 
-async function getAppToken() {
-    return 'AU53bxFVyaAxRtszH7TcZpmnnVf';
-}
-
-// ================= 关键修复 =================
-
-// 1. 无论在本地还是 Vercel，都必须注册静态文件中间件
-// 这样 server.js 才知道去哪里找 html (防止 API 路由意外漏接时 404)
-app.use(express.static(__dirname));
-
-// 2. 显式定义根路由 (作为双重保险)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// 3. 显式定义曼波页面路由
 app.get('/manbo.html', (req, res) => {
-    res.sendFile(__dirname + '/manbo.html');
+    res.sendFile(path.join(__dirname, 'manbo.html'));
 });
 
-// 启动服务 (仅本地运行时生效)
 if (require.main === module) {
     app.listen(PORT, () => {
         console.log(`\n✅ 曼波网站服务运行中: http://localhost:${PORT}`);
     });
 }
 
-// Vercel 需要导出 app
 module.exports = app;
