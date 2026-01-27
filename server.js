@@ -217,16 +217,35 @@ app.get('/api/leaderboard', async (req, res) => {
 });
 
 // 辅助：获取 APP_TOKEN (如果需要动态获取，但在本例中你已经提供了)
+// ... 上面是 API 路由 ...
+
+// 辅助：获取 APP_TOKEN 
 async function getAppToken() {
     return 'AU53bxFVyaAxRtszH7TcZpmnnVf';
 }
 
-// 启动服务
+// ================= 关键修复 =================
+
+// 1. 无论在本地还是 Vercel，都必须注册静态文件中间件
+// 这样 server.js 才知道去哪里找 html (防止 API 路由意外漏接时 404)
+app.use(express.static(__dirname));
+
+// 2. 显式定义根路由 (作为双重保险)
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+// 3. 显式定义曼波页面路由
+app.get('/manbo.html', (req, res) => {
+    res.sendFile(__dirname + '/manbo.html');
+});
+
+// 启动服务 (仅本地运行时生效)
 if (require.main === module) {
-    app.use(express.static(__dirname)); // 托管静态文件 (html)
     app.listen(PORT, () => {
         console.log(`\n✅ 曼波网站服务运行中: http://localhost:${PORT}`);
     });
 }
 
+// Vercel 需要导出 app
 module.exports = app;
