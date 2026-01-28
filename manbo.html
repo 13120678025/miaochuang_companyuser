@@ -25,7 +25,7 @@
                         mamboPink: '#FF66CC',
                         mamboPinkHover: '#FF3399',
                         mamboYellow: '#FFD700',
-                        umaGreen: '#4ADE80',
+                        umaGreen: '#4ADE80', // 类似草地色
                     },
                     fontFamily: {
                         sans: ['Montserrat', 'Noto Sans JP', 'sans-serif'],
@@ -51,9 +51,15 @@
             cursor: default;
         }
 
-        .btn-skew { transform: skewX(-15deg); }
-        .btn-skew > * { transform: skewX(15deg); }
+        /* URA 风格斜切按钮 */
+        .btn-skew {
+            transform: skewX(-15deg);
+        }
+        .btn-skew > * {
+            transform: skewX(15deg);
+        }
 
+        /* 速度线背景动画 */
         .speed-bg {
             background: repeating-linear-gradient(
                 90deg,
@@ -71,8 +77,12 @@
             to { background-position: -200px 0; }
         }
 
-        .text-neon { text-shadow: 0 0 5px #FF66CC, 0 0 10px #FF66CC; }
+        /* 霓虹发光文字 */
+        .text-neon {
+            text-shadow: 0 0 5px #FF66CC, 0 0 10px #FF66CC;
+        }
         
+        /* 支援卡风格边框 */
         .support-card {
             border: 4px solid #FFD700;
             border-radius: 10px;
@@ -108,6 +118,12 @@
             z-index: 10;
         }
 
+        /* 游戏区域优化 */
+        .rhythm-lane {
+            background: linear-gradient(to bottom, transparent, rgba(255, 102, 204, 0.1));
+            border-left: 1px solid rgba(255,255,255,0.1);
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
         .mambo-target {
             position: absolute;
             width: 80px;
@@ -130,6 +146,7 @@
             transform: rotate(-45deg);
         }
 
+        /* 音乐可视化条 */
         .music-bar {
             width: 6px;
             background-color: #FF66CC;
@@ -149,9 +166,11 @@
 </head>
 <body class="antialiased min-h-screen relative font-sans bg-diamond-pattern">
 
-    <!-- Intro Overlay -->
+    <!-- 1. 开屏引导页 (Skill Cut-in 风格) -->
     <div id="intro-overlay" class="fixed inset-0 z-[100] bg-mamboBlue flex flex-col items-center justify-center cursor-pointer overflow-hidden">
+        <!-- 动态背景线条 -->
         <div class="absolute inset-0 speed-bg opacity-30"></div>
+        
         <div class="relative z-10 text-center transform transition-transform duration-500 hover:scale-105">
             <div class="text-7xl md:text-9xl font-black italic text-transparent bg-clip-text bg-gradient-to-br from-white via-mamboPink to-mamboYellow mb-2 drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]" style="-webkit-text-stroke: 2px #003366;">
                 MAMBO
@@ -160,6 +179,8 @@
                 <span class="block transform skew-x-12 tracking-widest">CLICK TO START</span>
             </div>
         </div>
+        
+        <!-- 底部跑马灯 -->
         <div class="absolute bottom-10 w-full bg-black/50 py-2 border-y border-mamboPink/50 backdrop-blur-sm">
             <div class="text-mamboYellow text-xs font-mono text-center animate-pulse">
                 ⚠ WARNING: EXTREME DANCING ENERGY DETECTED
@@ -167,22 +188,27 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
+    <!-- 2. 登录/注册 模态框 (支援卡风格) -->
     <div id="login-modal" class="fixed inset-0 z-[90] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
         <div class="bg-gradient-to-b from-mamboBlue to-black border-4 border-mamboYellow p-8 max-w-sm w-full text-center shadow-[0_0_50px_rgba(255,215,0,0.3)] relative rounded-xl overflow-hidden">
+            <!-- R 标 -->
             <div class="absolute top-2 right-2 w-8 h-8 bg-mamboYellow rounded-full flex items-center justify-center font-black text-mamboBlue border-2 border-white">R</div>
+            
             <h2 class="text-2xl font-black mb-6 italic text-white border-b-2 border-mamboPink pb-2 inline-block">TRAINER REGISTRATION</h2>
+            
             <div class="space-y-4 relative z-10">
                 <div class="relative group">
                     <input type="text" id="username-input" placeholder="输入训练员代号" 
                         class="w-full bg-black/50 border-2 border-gray-500 p-3 text-white focus:outline-none focus:border-mamboPink text-center font-bold rounded transition-colors">
                     <div class="absolute inset-0 border-2 border-mamboPink opacity-0 group-hover:opacity-100 pointer-events-none rounded transition-opacity"></div>
                 </div>
+                
                 <div class="flex gap-2">
                     <button onclick="generateName()" class="flex-1 border border-white/30 text-xs py-2 hover:bg-white/10 rounded transition text-gray-300">
                         <i class="fas fa-dice mr-1"></i> 随机生成
                     </button>
                 </div>
+                
                 <button onclick="registerUser()" 
                     class="w-full bg-gradient-to-r from-mamboPink to-pink-600 text-white font-black py-4 hover:from-white hover:to-gray-200 hover:text-mamboPink transition-all uppercase tracking-widest text-lg shadow-lg rounded transform hover:-translate-y-1 active:translate-y-0">
                     JOIN TEAM MAMBO
@@ -191,9 +217,11 @@
         </div>
     </div>
 
-    <!-- Music Player -->
+    <!-- 悬浮音乐播放器 (Walkman 风格) -->
     <div id="music-player" class="fixed bottom-6 right-6 z-[80] bg-black/90 border border-white/20 p-4 rounded-xl shadow-[0_0_30px_rgba(255,102,204,0.3)] transition-transform transform translate-y-40 opacity-0 w-72 backdrop-blur-md">
+        <!-- 装饰线 -->
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-mamboPink via-mamboYellow to-mamboBlue rounded-t-xl"></div>
+        
         <div class="flex items-center gap-3 mb-3">
             <div class="flex items-end h-8 gap-[2px]">
                 <div class="music-bar"></div>
@@ -207,30 +235,37 @@
             </div>
             <button onclick="togglePlayer()" class="text-gray-400 hover:text-white"><i class="fas fa-chevron-down"></i></button>
         </div>
+        
         <div class="flex justify-between items-center px-2">
             <button onclick="prevTrack()" class="text-gray-400 hover:text-white transition transform hover:scale-125"><i class="fas fa-step-backward"></i></button>
+            
             <div class="relative">
                 <div class="absolute inset-0 bg-mamboPink blur-lg opacity-30 rounded-full"></div>
                 <button onclick="togglePlay()" id="play-btn" class="relative w-12 h-12 bg-gradient-to-br from-mamboPink to-purple-600 rounded-full flex items-center justify-center text-white hover:scale-110 transition shadow-xl border-2 border-white/50">
                     <i class="fas fa-play ml-1"></i>
                 </button>
             </div>
+            
             <button onclick="nextTrack()" class="text-gray-400 hover:text-white transition transform hover:scale-125"><i class="fas fa-step-forward"></i></button>
         </div>
     </div>
     
+    <!-- Mini Player Toggle -->
     <button id="mini-music-toggle" class="fixed bottom-6 right-6 z-[70] w-14 h-14 bg-black/80 text-mamboPink rounded-full flex items-center justify-center shadow-[0_0_15px_#FF66CC] border-2 border-mamboPink animate-spin-slow hidden group hover:scale-110 transition-transform" onclick="togglePlayer()">
         <i class="fas fa-compact-disc text-2xl group-hover:text-white transition-colors"></i>
     </button>
 
-    <!-- Nav -->
+    <!-- 顶部导航栏 (游戏 UI 风格) -->
     <nav class="sticky top-0 z-40 bg-mamboDarkBlue/95 border-b border-white/10 backdrop-blur-md px-4 py-3 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-4">
+            <!-- 1. 返回秒创AI 链接 (新增) -->
             <a href="https://www.wdl.best" class="flex items-center gap-1 text-gray-400 hover:text-mamboPink transition-colors text-xs font-bold border border-white/20 rounded px-2 py-1 hover:border-mamboPink">
                 <i class="fas fa-arrow-left"></i>
                 <span class="hidden md:inline">秒创AI</span>
             </a>
+
             <div class="flex items-center gap-2">
+                <!-- 模拟马蹄铁 Logo -->
                 <div class="w-8 h-8 bg-mamboYellow rounded-b-full rounded-t-sm flex items-center justify-center border-2 border-mamboBlue">
                     <span class="text-mamboBlue font-black text-xs">U</span>
                 </div>
@@ -239,27 +274,38 @@
                 </div>
             </div>
         </div>
+        
         <div class="flex gap-3 items-center">
+            <!-- 状态栏: 用户 -->
             <div id="user-display" class="hidden flex items-center bg-black/40 px-3 py-1 rounded-full border border-white/20">
                 <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
                 <span class="text-xs font-bold text-gray-300 tracking-wide">TRAINER</span>
             </div>
+            
+            <!-- 状态栏: 按钮 -->
             <button onclick="logout()" id="logout-btn" class="hidden text-xs text-gray-400 hover:text-white px-2">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
+            
+            <!-- 强调按钮 -->
             <a href="#game-section" class="btn-skew bg-gradient-to-r from-mamboPink to-purple-600 px-5 py-1 text-white text-xs font-black shadow-[0_0_10px_#FF66CC] hover:brightness-110 transition-all">
                 <span>START LIVE</span>
             </a>
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- 主内容区 -->
     <main class="relative z-10 container mx-auto px-4 pb-24">
         
-        <!-- Hero Section -->
+        <!-- Hero Section (Skill Cut-in) -->
         <section class="min-h-[80vh] flex flex-col items-center justify-center text-center relative overflow-hidden my-4 rounded-3xl border border-white/10 bg-black/20">
+            <!-- 动态光束背景 -->
             <div class="absolute inset-0 speed-bg opacity-20 pointer-events-none"></div>
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black italic text-white/5 whitespace-nowrap pointer-events-none select-none">PHANTOM</div>
+            
+            <!-- 巨大的背景文字 -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black italic text-white/5 whitespace-nowrap pointer-events-none select-none">
+                PHANTOM
+            </div>
 
             <div class="relative z-10 transform translate-y-0 opacity-100 transition-all duration-1000">
                 <div class="inline-flex items-center gap-2 bg-mamboYellow text-mamboBlue font-black px-4 py-1 mb-6 transform -skew-x-12 shadow-lg border-2 border-white">
@@ -267,56 +313,170 @@
                     <span class="transform skew-x-12 text-sm">G1 WINNER</span>
                     <i class="fas fa-star text-xs"></i>
                 </div>
+                
                 <h1 class="text-6xl md:text-9xl font-black mb-4 italic leading-none drop-shadow-[0_0_20px_rgba(255,102,204,0.5)]">
                     <span class="text-white">MEISHO</span><br>
                     <span class="text-transparent bg-clip-text bg-gradient-to-b from-mamboPink to-purple-600">MAMBO</span>
                 </h1>
+                
                 <p class="text-xl md:text-2xl font-bold tracking-[0.5em] text-mamboPink/80 mb-12">メイショウマンボ</p>
+                
+                <!-- 菱形主视觉图 -->
                 <div class="relative w-72 h-72 md:w-96 md:h-96 mx-auto group perspective-1000">
+                     <!-- 旋转的外框 -->
                      <div class="absolute inset-0 border-[6px] border-mamboPink/30 rotate-45 rounded-[2rem] animate-[spin_10s_linear_infinite]"></div>
                      <div class="absolute inset-4 border-[2px] border-mamboYellow/50 rotate-45 rounded-[1.5rem] animate-[spin_15s_linear_infinite_reverse]"></div>
+                     
+                     <!-- 核心图片容器 -->
                      <div class="absolute inset-8 bg-mamboBlue rotate-45 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] border-4 border-white group-hover:scale-105 transition-transform duration-500 rounded-xl z-10">
                         <div class="w-full h-full -rotate-45 scale-125 flex items-center justify-center bg-gradient-to-t from-black via-mamboBlue to-blue-900 relative">
+                            <!-- 模拟剪影 -->
                             <i class="fas fa-running text-9xl text-white drop-shadow-[0_0_15px_#FF66CC] transform translate-y-4"></i>
+                            <!-- 粒子效果 -->
+                            <div class="absolute inset-0 pop-dot"></div>
                         </div>
                      </div>
                 </div>
             </div>
-            <div class="absolute bottom-8 animate-bounce"><i class="fas fa-chevron-down text-3xl text-white/50"></i></div>
+            
+            <!-- 滚动提示 -->
+            <div class="absolute bottom-8 animate-bounce">
+                <i class="fas fa-chevron-down text-3xl text-white/50"></i>
+            </div>
+        </section>
+		
+		
+        <!-- 曼波模拟器 (Rhythm Game Interface) -->
+        <section id="game-section" class="py-24 text-center relative mt-12">
+            <!-- 标题区域 -->
+            <div class="mb-10 relative inline-block">
+                <div class="absolute -inset-4 bg-mamboPink/20 blur-xl rounded-full"></div>
+                <h2 class="relative text-5xl md:text-7xl font-black text-white italic transform -skew-x-6 text-neon">
+                    MAMBO <span class="text-mamboYellow">LIVE</span>
+                </h2>
+                <div class="text-sm font-bold tracking-[1em] text-mamboPink mt-2">RHYTHM ACTION</div>
+            </div>
+
+            <!-- 游戏机台外观 -->
+            <div class="relative w-full max-w-3xl mx-auto aspect-[4/3] bg-gray-900 border-x-8 border-t-8 border-gray-700 rounded-t-3xl overflow-hidden shadow-[0_0_100px_rgba(255,102,204,0.2)]" id="game-container">
+                <!-- 舞台灯光 -->
+                <div class="absolute top-0 w-full h-32 bg-gradient-to-b from-mamboPink/20 to-transparent z-0 pointer-events-none"></div>
+                
+                <!-- 游戏区域背景 (网格) -->
+                <div class="absolute inset-0 z-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px; perspective: 500px; transform: rotateX(20deg);"></div>
+                
+                <!-- 游戏开始遮罩 -->
+                <div id="game-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-30 backdrop-blur-sm">
+                    <div class="w-24 h-24 rounded-full border-4 border-mamboYellow flex items-center justify-center mb-6 animate-bounce">
+                        <i class="fas fa-play text-4xl text-mamboYellow ml-2"></i>
+                    </div>
+                    <p class="text-4xl font-black mb-8 italic text-white" id="score-display">READY TO DANCE?</p>
+                    <button onclick="startGame()" class="btn-skew px-12 py-4 bg-gradient-to-r from-mamboPink to-purple-600 text-white text-2xl font-black hover:scale-110 hover:brightness-125 transition-all shadow-[0_0_20px_#FF66CC]">
+                        <span>START LIVE</span>
+                    </button>
+                    <div class="mt-8 flex gap-8 text-sm text-gray-400 font-mono">
+                        <div><i class="fas fa-mouse pointer mr-1"></i> CLICK DIAMONDS</div>
+                        <div><i class="fas fa-clock mr-1"></i> 30 SECONDS</div>
+                    </div>
+                </div>
+                
+                <!-- 游戏交互层 -->
+                <div id="game-play-area" class="absolute inset-0 z-10 overflow-hidden"></div>
+                
+                <!-- HUD: 连击/分数 -->
+                <div class="absolute top-4 left-6 z-20 text-left">
+                    <div class="text-xs text-gray-400 font-bold tracking-widest">SCORE</div>
+                    <div id="current-score" class="text-4xl font-black text-white font-mono tabular-nums leading-none text-neon">000000</div>
+                </div>
+                
+                <!-- HUD: 时间 -->
+                <div class="absolute top-4 right-6 z-20 text-right">
+                    <div class="text-xs text-gray-400 font-bold tracking-widest">TIME</div>
+                    <div class="text-4xl font-black text-mamboYellow font-mono tabular-nums leading-none">
+                        <span id="time-left">30</span><span class="text-lg">.00</span>
+                    </div>
+                </div>
+                
+                <!-- Combo 提示 (动态生成) -->
+                <div id="combo-display" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20 hidden">
+                    <div class="text-6xl font-black italic text-mamboYellow drop-shadow-md animate-ping">PERFECT</div>
+                </div>
+            </div>
         </section>
 
-        <!-- Memories -->
+        <!-- 谁是曼波看板 (Leaderboard) -->
+        <section class="py-20 max-w-3xl mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 text-center text-white italic">
+                <span class="text-mamboPink">TOP</span> DANCERS
+            </h2>
+            
+            <div class="bg-black/60 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-xs uppercase tracking-widest">
+                        <tr>
+                            <th class="p-4 w-20 text-center">Rank</th>
+                            <th class="p-4">Name</th>
+                            <th class="p-4 text-right">Score</th>
+                            <th class="p-4 text-right hidden sm:table-cell">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body" class="text-sm font-bold divide-y divide-white/5">
+                        <tr>
+                            <td colspan="4" class="p-12 text-center text-gray-500">
+                                <i class="fas fa-circle-notch fa-spin mr-2"></i> Syncing Data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 text-center">
+                 <button onclick="fetchLeaderboard()" class="text-xs text-mamboPink hover:text-white transition uppercase tracking-widest border-b border-mamboPink hover:border-white pb-1">
+                    Refresh Board
+                </button>
+            </div>
+        </section>
+
+        <!-- 画廊 / 曼波回忆 (Support Cards) -->
         <section class="py-20">
             <div class="flex items-center gap-4 mb-12 px-4">
                 <div class="h-1 flex-1 bg-white/10"></div>
-                <h2 class="text-3xl md:text-5xl font-black italic text-white flex items-center gap-3"><i class="fas fa-camera-retro text-mamboPink"></i> MEMORIES</h2>
+                <h2 class="text-3xl md:text-5xl font-black italic text-white flex items-center gap-3">
+                    <i class="fas fa-camera-retro text-mamboPink"></i> MEMORIES
+                </h2>
                 <div class="h-1 flex-1 bg-white/10"></div>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 max-w-6xl mx-auto">
+                <!-- Card 1: SSR Style -->
                 <div class="support-card group cursor-pointer hover:-translate-y-2 transition-transform duration-300">
                     <div class="support-type-icon">速</div>
                     <div class="h-64 bg-gray-800 relative overflow-hidden">
-                        <img src="https://placehold.co/400x500/003366/FFF?text=OAK+WIN" class="w-full h-full object-cover opacity-80 group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-700">
+                        <img src="https://placehold.co/400x500/003366/FFF?text=OAK+WIN" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
                         <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
                             <div class="text-mamboYellow font-bold text-xs mb-1">2013 OAKS</div>
                             <div class="text-white font-black text-xl italic">THE CROWNING MOMENT</div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Card 2: SSR Style -->
                 <div class="support-card group cursor-pointer hover:-translate-y-2 transition-transform duration-300 border-mamboPink">
                     <div class="support-type-icon bg-mamboYellow text-black">根</div>
                     <div class="h-64 bg-gray-800 relative overflow-hidden">
-                        <img src="https://placehold.co/400x500/FF66CC/FFF?text=DANCING" class="w-full h-full object-cover opacity-80 group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-700">
+                        <img src="https://placehold.co/400x500/FF66CC/FFF?text=DANCING" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
                         <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
                             <div class="text-mamboPink font-bold text-xs mb-1">MAMBO FEVER</div>
                             <div class="text-white font-black text-xl italic">DANCING QUEEN</div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Card 3: SSR Style -->
                 <div class="support-card group cursor-pointer hover:-translate-y-2 transition-transform duration-300 border-blue-400">
                     <div class="support-type-icon bg-blue-500">耐</div>
                     <div class="h-64 bg-gray-800 relative overflow-hidden">
-                        <img src="https://placehold.co/400x500/FFD700/000?text=NEVER+GIVE+UP" class="w-full h-full object-cover opacity-80 group-hover:scale-110 grayscale group-hover:grayscale-0 transition-all duration-700">
+                        <img src="https://placehold.co/400x500/FFD700/000?text=NEVER+GIVE+UP" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0">
                         <div class="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-4 pt-12">
                             <div class="text-blue-400 font-bold text-xs mb-1">LATE CAREER</div>
                             <div class="text-white font-black text-xl italic">UNBREAKABLE SPIRIT</div>
@@ -326,110 +486,103 @@
             </div>
         </section>
 
-        <!-- Status -->
+        <!-- 马匹资料 (五维雷达图) -->
         <section class="py-20 px-4">
             <div class="bg-black/40 rounded-3xl p-8 border border-white/10 backdrop-blur-md max-w-5xl mx-auto flex flex-col md:flex-row gap-12 items-center relative overflow-hidden">
+                <!-- 背景装饰 -->
                 <div class="absolute -right-20 -top-20 text-[20rem] text-white/5 font-black italic rotate-12 pointer-events-none">STATUS</div>
+
                 <div class="flex-1 w-full relative z-10">
-                    <h2 class="text-4xl font-black mb-6 italic text-white"><span class="text-mamboPink">UMAMUSUME</span> STATUS</h2>
+                    <h2 class="text-4xl font-black mb-6 italic text-white">
+                        <span class="text-mamboPink">UMAMUSUME</span> STATUS
+                    </h2>
+                    
                     <div class="grid grid-cols-2 gap-4 mb-6">
-                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-mamboYellow"><div class="text-xs text-gray-400">草地适性</div><div class="font-black text-xl">A</div></div>
-                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-mamboPink"><div class="text-xs text-gray-400">距离适性</div><div class="font-black text-xl">A / A</div></div>
-                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-white"><div class="text-xs text-gray-400">脚质</div><div class="font-black text-xl">A / B</div></div>
-                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-purple-500"><div class="text-xs text-gray-400">曼波适性</div><div class="font-black text-xl text-mamboPink">SS+</div></div>
+                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-mamboYellow">
+                            <div class="text-xs text-gray-400">草地适性</div>
+                            <div class="font-black text-xl">A</div>
+                        </div>
+                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-mamboPink">
+                            <div class="text-xs text-gray-400">距离适性 (中/长)</div>
+                            <div class="font-black text-xl">A / A</div>
+                        </div>
+                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-white">
+                            <div class="text-xs text-gray-400">脚质 (差/追)</div>
+                            <div class="font-black text-xl">A / B</div>
+                        </div>
+                        <div class="bg-mamboBlue/50 p-3 rounded border-l-4 border-purple-500">
+                            <div class="text-xs text-gray-400">曼波适性</div>
+                            <div class="font-black text-xl text-mamboPink">SS+</div>
+                        </div>
                     </div>
+                    
+                    <p class="text-sm text-gray-300 leading-relaxed italic border-t border-white/10 pt-4">
+                        "在舞池般的草地上起舞吧！虽然有时会因为心情不好而不想跑，但一旦节奏对了，就没有人能追上她的舞步。"
+                    </p>
                 </div>
+
+                <!-- 雷达图容器 -->
                 <div class="w-full md:w-[400px] aspect-square relative bg-white/5 rounded-full p-4 border border-white/10">
                     <canvas id="statusChart"></canvas>
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20"><i class="fas fa-running text-8xl text-white"></i></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Game Section -->
-        <section id="game-section" class="py-24 text-center relative mt-12">
-            <div class="mb-10 relative inline-block">
-                <div class="absolute -inset-4 bg-mamboPink/20 blur-xl rounded-full"></div>
-                <h2 class="relative text-5xl md:text-7xl font-black text-white italic transform -skew-x-6 text-neon">MAMBO <span class="text-mamboYellow">LIVE</span></h2>
-                <div class="text-sm font-bold tracking-[1em] text-mamboPink mt-2">RHYTHM ACTION</div>
-            </div>
-            <div class="relative w-full max-w-3xl mx-auto aspect-[4/3] bg-gray-900 border-x-8 border-t-8 border-gray-700 rounded-t-3xl overflow-hidden shadow-[0_0_100px_rgba(255,102,204,0.2)]" id="game-container">
-                <div class="absolute top-0 w-full h-32 bg-gradient-to-b from-mamboPink/20 to-transparent z-0 pointer-events-none"></div>
-                <div class="absolute inset-0 z-0 opacity-20" style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px; perspective: 500px; transform: rotateX(20deg);"></div>
-                
-                <div id="game-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-30 backdrop-blur-sm">
-                    <div class="w-24 h-24 rounded-full border-4 border-mamboYellow flex items-center justify-center mb-6 animate-bounce"><i class="fas fa-play text-4xl text-mamboYellow ml-2"></i></div>
-                    <p class="text-4xl font-black mb-8 italic text-white" id="score-display">READY TO DANCE?</p>
-                    <button onclick="startGame()" class="btn-skew px-12 py-4 bg-gradient-to-r from-mamboPink to-purple-600 text-white text-2xl font-black hover:scale-110 transition-all shadow-[0_0_20px_#FF66CC]"><span>START LIVE</span></button>
-                    <div class="mt-8 flex gap-8 text-sm text-gray-400 font-mono">
-                        <div><i class="fas fa-mouse pointer mr-1"></i> CLICK DIAMONDS</div>
-                        <div><i class="fas fa-clock mr-1"></i> 30 SECONDS</div>
+                    <!-- 中心图标 -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                         <i class="fas fa-running text-8xl text-white"></i>
                     </div>
                 </div>
-                
-                <div id="game-play-area" class="absolute inset-0 z-10 overflow-hidden"></div>
-                
-                <div class="absolute top-4 left-6 z-20 text-left">
-                    <div class="text-xs text-gray-400 font-bold tracking-widest">SCORE</div>
-                    <div id="current-score" class="text-4xl font-black text-white font-mono tabular-nums leading-none text-neon">000000</div>
-                </div>
-                <div class="absolute top-4 right-6 z-20 text-right">
-                    <div class="text-xs text-gray-400 font-bold tracking-widest">TIME</div>
-                    <div class="text-4xl font-black text-mamboYellow font-mono tabular-nums leading-none"><span id="time-left">30</span><span class="text-lg">.00</span></div>
-                </div>
-                <div id="combo-display" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20 hidden">
-                    <div class="text-6xl font-black italic text-mamboYellow drop-shadow-md animate-ping">PERFECT</div>
-                </div>
             </div>
         </section>
 
-        <!-- Leaderboard -->
-        <section class="py-20 max-w-3xl mx-auto px-4">
-            <h2 class="text-3xl font-black mb-8 text-center text-white italic"><span class="text-mamboPink">TOP</span> DANCERS</h2>
-            <div class="bg-black/60 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md">
-                <table class="w-full text-left">
-                    <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-xs uppercase tracking-widest">
-                        <tr><th class="p-4 w-20 text-center">Rank</th><th class="p-4">Name</th><th class="p-4 text-right">Score</th><th class="p-4 text-right hidden sm:table-cell">Date</th></tr>
-                    </thead>
-                    <tbody id="leaderboard-body" class="text-sm font-bold divide-y divide-white/5">
-                        <tr><td colspan="4" class="p-12 text-center text-gray-500"><i class="fas fa-circle-notch fa-spin mr-2"></i> Syncing Data...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="mt-6 text-center">
-                 <button onclick="fetchLeaderboard()" class="text-xs text-mamboPink hover:text-white transition uppercase tracking-widest border-b border-mamboPink hover:border-white pb-1">Refresh Board</button>
-            </div>
-        </section>
+
     </main>
 
     <footer class="bg-black py-12 border-t-4 border-mamboPink text-center relative overflow-hidden">
         <div class="relative z-10 flex flex-col items-center gap-4">
+            <!-- 类似 Cygames 的版权风格 -->
             <div class="text-2xl font-black italic text-white tracking-tighter">MEISHO MAMBO PROJECT</div>
-            <div class="text-[10px] text-gray-500 uppercase tracking-widest">Unofficial Fan Site • Powered by Node.js & Feishu</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-widest">
+                Unofficial Fan Site • Created for Entertainment<br>
+                Powered by Node.js & Feishu
+            </div>
+            <div class="flex gap-4 text-gray-400 mt-2">
+                <a href="#" class="hover:text-mamboPink"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-mamboPink"><i class="fab fa-github"></i></a>
+                <a href="#" class="hover:text-mamboPink"><i class="fas fa-envelope"></i></a>
+            </div>
         </div>
     </footer>
 
     <!-- Audio Element -->
-    <!-- [关键修改] 添加 preload="auto" 提前加载 -->
-    <audio id="bg-music" loop crossorigin="anonymous" preload="auto"></audio>
+    <audio id="bg-music" loop crossorigin="anonymous"></audio>
 
     <script>
+        // ================= 全局配置 =================
         const API_BASE = '/api';
 
-        // 智能音乐路径处理
-        // 注意：根据文件上传记录，文件名为 mb1.MP3 (大写)
+        // ================= 0. 音乐播放器 (优化版) =================
         const playlist = [
             { 
-                title: "开车必听", 
-                src: "./music/mb1.MP3" // 优先尝试大写后缀 (根据上传文件)
+                title: "熬夜必听", 
+                src: "./music/mb3.MP3" 
             },
             { 
-                title: "好词不挑曲", 
-                src: "./music/mb2.mp3" 
+                title: "晚安神曲", 
+                src: "./music/mb6.MP3" 
+            },			
+            { 
+                title: "开车必备", 
+                src: "./music/mb2.MP3" 
             }, 
             { 
                 title: "考研必备", 
-                src: "./music/mb3.mp3" 
+                src: "./music/mb4.MP3" 
+            },
+			{ 
+                title: "新年快乐", 
+                src: "./music/mb1.MP3" 
+            },
+            { 
+                title: "生日快乐", 
+                src: "./music/mb5.MP3" 
             }
         ];
         
@@ -442,41 +595,6 @@
         const miniToggle = document.getElementById('mini-music-toggle');
         const introOverlay = document.getElementById('intro-overlay');
 
-        // [关键修复] 音乐加载错误处理
-        // 如果加载失败，尝试切换大小写重试
-        audio.onerror = function(e) {
-            const currentSrc = audio.src;
-            console.warn(`音频加载失败: ${currentSrc}`, e);
-            
-            // 避免无限循环重试
-            if (audio.dataset.retried === "true") {
-                trackTitle.innerText = "Music File Not Found (Check Console)";
-                return;
-            }
-
-            // 尝试切换后缀大小写
-            if (currentSrc.endsWith('.mp3')) {
-                console.log('尝试切换为 .MP3 重试...');
-                audio.src = currentSrc.replace('.mp3', '.MP3');
-            } else if (currentSrc.endsWith('.MP3')) {
-                console.log('尝试切换为 .mp3 重试...');
-                audio.src = currentSrc.replace('.MP3', '.mp3');
-            }
-            
-            audio.dataset.retried = "true";
-            // 只在本来就应该播放的时候重试播放，且需要用户交互已激活
-            if(isPlaying) {
-                // 注意：这里可能因为是异步回调而被拦截，但这是我们唯一的补救机会
-                audio.play().catch(err => console.error("Retry play blocked:", err));
-            }
-        };
-
-        // 每次成功加载时重置重试标记
-        audio.oncanplay = function() {
-            audio.dataset.retried = "false";
-            console.log("音频已准备就绪，等待交互播放");
-        };
-
         function initPlayer() {
             currentTrackIndex = 0;
             audio.src = playlist[0].src;
@@ -487,31 +605,18 @@
             currentTrackIndex = index;
             audio.src = playlist[index].src;
             trackTitle.innerText = playlist[index].title;
-            // 重置重试标记，因为是新歌曲
-            audio.dataset.retried = "false"; 
-            if (isPlaying) audio.play().catch(e => console.error("Auto-play blocked:", e));
-        }
-
-        // [关键修改] 尝试解锁音频（iOS/Chrome 兼容性）
-        function unlockAudio() {
-            if (audio.paused) {
-                // 立即播放一个空的或者当前的音频，然后暂停，以解锁 AudioContext
-                audio.play().then(() => {
-                    console.log("音频上下文已解锁");
-                    isPlaying = true;
-                    playBtnIcon.className = 'fas fa-pause ml-0';
-                    document.querySelectorAll('.music-bar').forEach(bar => bar.style.animationPlayState = 'running');
-                    miniToggle.classList.add('animate-spin-slow');
-                    trackTitle.innerText = playlist[currentTrackIndex].title;
-                }).catch(e => {
-                    console.warn("解锁播放失败，可能需要更明确的用户点击", e);
-                });
-            }
+            if (isPlaying) audio.play().catch(()=>{});
         }
 
         function togglePlay() {
             if (audio.paused) {
-                unlockAudio();
+                audio.play().then(() => {
+                    isPlaying = true;
+                    playBtnIcon.className = 'fas fa-pause ml-0'; // 居中修正
+                    document.querySelectorAll('.music-bar').forEach(bar => bar.style.animationPlayState = 'running');
+                    miniToggle.classList.add('animate-spin-slow');
+                    trackTitle.innerText = playlist[currentTrackIndex].title;
+                }).catch(e => console.log("Play blocked", e));
             } else {
                 audio.pause();
                 isPlaying = false;
@@ -543,29 +648,24 @@
             }
         }
 
-        // [关键修改] Intro 点击事件处理
-        // 这里的逻辑必须同步执行 play()，不能全放在 setTimeout 里
+        // Intro 点击
         introOverlay.addEventListener('click', () => {
-            console.log("用户点击 Intro，尝试激活音频...");
-            
-            // 1. 立即尝试播放 (这是关键，必须在点击事件的回调栈顶层执行)
-            unlockAudio();
-            
-            // 2. 处理 UI 动画
             introOverlay.style.opacity = '0';
             introOverlay.style.pointerEvents = 'none';
             setTimeout(() => {
                 introOverlay.style.display = 'none';
+                togglePlay();
                 togglePlayer(); 
                 checkLogin();
             }, 700);
         });
 
-        // Login Logic
+        // ================= 1. 注册/登录 (逻辑保持不变，UI已更新) =================
         const loginModal = document.getElementById('login-modal');
         const userDisplay = document.getElementById('user-display');
         const usernameInput = document.getElementById('username-input');
         const logoutBtn = document.getElementById('logout-btn');
+        
         let currentUser = localStorage.getItem('mambo_username');
 
         function checkLogin() {
@@ -577,7 +677,9 @@
                 userDisplay.querySelector('span').textContent = currentUser;
                 fetchLeaderboard(); 
             } else {
-                if (introOverlay.style.display === 'none') loginModal.style.display = 'flex';
+                if (introOverlay.style.display === 'none') {
+                    loginModal.style.display = 'flex';
+                }
             }
         }
 
@@ -589,30 +691,43 @@
         }
 
         function generateName() {
-            usernameInput.value = `曼波T${Math.floor(Math.random() * 9999).toString().padStart(4, '0')}`;
+            const randomNum = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+            usernameInput.value = `曼波T${randomNum}`;
         }
 
         async function registerUser() {
             const name = usernameInput.value.trim();
             if (!name) return alert('请输入训练员代号');
+            
+            // 简单的 UI 反馈
             const btn = document.querySelector('#login-modal button:last-child');
             const originalText = btn.innerText;
             btn.innerText = 'CONNECTING...';
+            
             try {
+                // 模拟 API 延迟
                 await new Promise(r => setTimeout(r, 800));
-                await fetch(`${API_BASE}/register`, {
+                // 实际请求逻辑保留，此处假设成功以便演示 UI
+                const res = await fetch(`${API_BASE}/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: name })
-                }).catch(() => {});
+                }).catch(() => ({ ok: false })); // 防止本地无后端报错
+
+                // 即使失败也允许进入（演示用）
                 localStorage.setItem('mambo_username', name);
                 currentUser = name;
                 loginModal.style.display = 'none';
                 checkLogin();
-            } catch (e) { console.error(e); } finally { btn.innerText = originalText; }
+                
+            } catch (e) {
+                console.error(e);
+            } finally {
+                btn.innerText = originalText;
+            }
         }
 
-        // Game Logic
+        // ================= 2. 游戏逻辑 (音游化) =================
         let gameActive = false;
         let score = 0;
         let timeLeft = 30;
@@ -623,6 +738,7 @@
         const timeEl = document.getElementById('time-left');
         const gameOverlay = document.getElementById('game-overlay');
         const finalScoreDisplay = document.getElementById('score-display');
+        const comboDisplay = document.getElementById('combo-display');
 
         function startGame() {
             if (gameActive) return;
@@ -633,19 +749,24 @@
             timeEl.innerText = "30";
             gameOverlay.style.display = 'none';
             gameContainer.innerHTML = '';
+
             if (audio.paused) togglePlay();
+
             gameTimer = setInterval(() => {
                 timeLeft--;
                 timeEl.innerText = timeLeft.toString().padStart(2, '0');
-                if (timeLeft <= 0) endGame();
+                if (timeLeft <= 0) {
+                    endGame();
+                }
             }, 1000);
+
             spawnLoop();
         }
 
         function spawnLoop() {
             if (!gameActive) return;
             spawnTarget();
-            let delay = 800 - (score * 5); 
+            let delay = 800 - (score * 5); // 稍微变快
             if (delay < 300) delay = 300; 
             spawnTimer = setTimeout(spawnLoop, delay);
         }
@@ -653,23 +774,53 @@
         function spawnTarget() {
             const target = document.createElement('div');
             target.className = 'mambo-target';
+            
+            // 限制在容器内
             const maxX = gameContainer.clientWidth - 80;
             const maxY = gameContainer.clientHeight - 80;
             const x = Math.random() * maxX;
             const y = Math.random() * maxY;
+
             target.style.left = `${x}px`;
             target.style.top = `${y}px`;
+
             target.onmousedown = (e) => {
                 e.stopPropagation();
                 addScore(100);
                 showCombo(x, y);
-                anime({ targets: target, scale: 1.5, opacity: 0, duration: 200, easing: 'easeOutExpo', complete: () => target.remove() });
+                
+                // 击破特效
+                anime({
+                    targets: target,
+                    scale: 1.5,
+                    opacity: 0,
+                    duration: 200,
+                    easing: 'easeOutExpo',
+                    complete: () => target.remove()
+                });
             };
+
             gameContainer.appendChild(target);
-            anime({ targets: target, scale: [0, 1], rotate: '1turn', duration: 400, easing: 'spring(1, 80, 10, 0)' });
+
+            // 出现动画: 缩放 + 旋转
+            anime({
+                targets: target,
+                scale: [0, 1],
+                rotate: '1turn',
+                duration: 400,
+                easing: 'spring(1, 80, 10, 0)'
+            });
+
+            // 自动消失 (Miss)
             setTimeout(() => {
                 if (target.parentNode) {
-                    anime({ targets: target, scale: 0, opacity: 0, duration: 300, complete: () => target.remove() });
+                    anime({
+                        targets: target,
+                        scale: 0,
+                        opacity: 0,
+                        duration: 300,
+                        complete: () => target.remove()
+                    });
                 }
             }, 1500);
         }
@@ -677,26 +828,42 @@
         function addScore(points) {
             score += points;
             scoreEl.innerText = score.toString().padStart(6, '0');
-            anime({ targets: scoreEl, scale: [1.2, 1], duration: 200 });
+            // 分数跳动
+            anime({
+                targets: scoreEl,
+                scale: [1.2, 1],
+                duration: 200
+            });
         }
 
         function showCombo(x, y) {
+            // 简单的 Combo 文字提示
             const text = document.createElement('div');
             text.innerText = "PERFECT";
             text.className = "absolute text-mamboYellow font-black italic text-2xl pointer-events-none z-30 drop-shadow-md";
             text.style.left = `${x}px`;
             text.style.top = `${y - 30}px`;
             gameContainer.appendChild(text);
-            anime({ targets: text, translateY: -50, opacity: 0, duration: 600, easing: 'easeOutQuad', complete: () => text.remove() });
+
+            anime({
+                targets: text,
+                translateY: -50,
+                opacity: 0,
+                duration: 600,
+                easing: 'easeOutQuad',
+                complete: () => text.remove()
+            });
         }
 
         async function endGame() {
             gameActive = false;
             clearInterval(gameTimer);
             clearTimeout(spawnTimer);
+            
             gameOverlay.style.display = 'flex';
             finalScoreDisplay.innerText = `FULL COMBO? ${score}`;
             document.querySelector('#game-overlay button span').innerText = "RETRY LIVE";
+
             if (currentUser && score > 0) {
                 try {
                     await fetch(`${API_BASE}/score`, {
@@ -709,15 +876,20 @@
             }
         }
 
-        // Leaderboard
+        // ================= 3. 排行榜 (UI 优化) =================
         async function fetchLeaderboard() {
             const tbody = document.getElementById('leaderboard-body');
             try {
                 const res = await fetch(`${API_BASE}/leaderboard`);
                 const json = await res.json();
+                
                 if (json.success && json.data.length > 0) {
                     tbody.innerHTML = json.data.map((item, index) => {
-                        let rankColor = index === 0 ? "text-mamboYellow" : (index === 1 ? "text-gray-300" : (index === 2 ? "text-orange-400" : "text-white"));
+                        let rankColor = "text-white";
+                        if(index === 0) rankColor = "text-mamboYellow";
+                        if(index === 1) rankColor = "text-gray-300";
+                        if(index === 2) rankColor = "text-orange-400";
+
                         return `
                         <tr class="hover:bg-white/10 transition-colors">
                             <td class="p-4 font-black text-center ${rankColor} text-lg italic">#${index + 1}</td>
@@ -730,11 +902,12 @@
                     tbody.innerHTML = '<tr><td colspan="4" class="p-12 text-center text-gray-400">NO RECORDS YET</td></tr>';
                 }
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-12 text-center text-gray-500 text-xs">OFFLINE MODE</td></tr>';
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="4" class="p-12 text-center text-gray-500 text-xs">OFFLINE MODE (Launch server.js for online features)</td></tr>';
             }
         }
 
-        // Radar Chart
+        // ================= 4. 初始化图表 (五维雷达图) =================
         const ctx = document.getElementById('statusChart').getContext('2d');
         new Chart(ctx, {
             type: 'radar',
@@ -742,7 +915,7 @@
                 labels: ['速度 (SPEED)', '耐力 (STAMINA)', '力量 (POWER)', '根性 (GUTS)', '智力 (WISDOM)'],
                 datasets: [{
                     label: 'Meisho Mambo',
-                    data: [85, 95, 90, 80, 75],
+                    data: [85, 95, 90, 80, 75], // 模拟数据
                     backgroundColor: 'rgba(255, 102, 204, 0.4)',
                     borderColor: '#FF66CC',
                     pointBackgroundColor: '#FFD700',
@@ -759,16 +932,25 @@
                     r: {
                         angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
                         grid: { color: 'rgba(255, 255, 255, 0.2)' },
-                        pointLabels: { color: 'white', font: { size: 12, weight: 'bold', family: 'Montserrat' } },
+                        pointLabels: {
+                            color: 'white',
+                            font: { size: 12, weight: 'bold', family: 'Montserrat' }
+                        },
                         ticks: { display: false, backdropColor: 'transparent' },
-                        suggestedMin: 0, suggestedMax: 100
+                        suggestedMin: 0,
+                        suggestedMax: 100
                     }
                 },
-                plugins: { legend: { display: false } }
+                plugins: {
+                    legend: { display: false }
+                }
             }
         });
 
-        window.onload = () => { initPlayer(); };
+        window.onload = () => {
+            initPlayer();
+        };
+
     </script>
 </body>
 </html>
